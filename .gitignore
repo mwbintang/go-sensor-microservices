@@ -1,0 +1,30 @@
+# Ignore operating system and editor-specific files
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Ignore the Go compiled binaries
+/bin/
+/microservice-a/microservice-a
+/microservice-b/microservice-b
+
+# Ignore dependency directories (if they were to be created, though Go modules usually don't)
+/vendor/
+
+# Ignore auto-generated protobuf files (Optional but common)
+# Some people commit these, others don't. Not including them is safer.
+/proto/gen/
+
+# Ignore log files
+*.log
+
+# Ignore environment-specific files
+.env
+.env.local
+.env.*.local
+
+# Ignore Docker-Compose override files
+docker-compose.override.yml
