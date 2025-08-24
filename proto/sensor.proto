@@ -6,9 +6,10 @@ option go_package = "github.com/your-username/go-sensor-microservices/proto";
 message SensorData {
     string id = 1;
     double value = 2;
-    int64 timestamp = 3;
-    string type = 4;
-    string unit = 5;
+    string sensor_type = 3;
+    string id1 = 4;
+    int32 id2 = 5;
+    int64 timestamp = 6;
 }
 
 // Request message for getting sensor data
@@ -29,4 +30,7 @@ service SensorService {
     
     // Stream sensor data (optional)
     rpc StreamSensorData(SensorRequest) returns (stream SensorData) {};
+
+    // ✅ New RPC for pushing data
+    rpc SendSensorData(SensorData) returns (SensorResponse) {};
 }

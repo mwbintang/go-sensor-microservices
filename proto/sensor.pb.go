@@ -26,9 +26,10 @@ type SensorData struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	Value         float64                `protobuf:"fixed64,2,opt,name=value,proto3" json:"value,omitempty"`
-	Timestamp     int64                  `protobuf:"varint,3,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
-	Type          string                 `protobuf:"bytes,4,opt,name=type,proto3" json:"type,omitempty"`
-	Unit          string                 `protobuf:"bytes,5,opt,name=unit,proto3" json:"unit,omitempty"`
+	SensorType    string                 `protobuf:"bytes,3,opt,name=sensor_type,json=sensorType,proto3" json:"sensor_type,omitempty"`
+	Id1           string                 `protobuf:"bytes,4,opt,name=id1,proto3" json:"id1,omitempty"`
+	Id2           int32                  `protobuf:"varint,5,opt,name=id2,proto3" json:"id2,omitempty"`
+	Timestamp     int64                  `protobuf:"varint,6,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -77,25 +78,32 @@ func (x *SensorData) GetValue() float64 {
 	return 0
 }
 
+func (x *SensorData) GetSensorType() string {
+	if x != nil {
+		return x.SensorType
+	}
+	return ""
+}
+
+func (x *SensorData) GetId1() string {
+	if x != nil {
+		return x.Id1
+	}
+	return ""
+}
+
+func (x *SensorData) GetId2() int32 {
+	if x != nil {
+		return x.Id2
+	}
+	return 0
+}
+
 func (x *SensorData) GetTimestamp() int64 {
 	if x != nil {
 		return x.Timestamp
 	}
 	return 0
-}
-
-func (x *SensorData) GetType() string {
-	if x != nil {
-		return x.Type
-	}
-	return ""
-}
-
-func (x *SensorData) GetUnit() string {
-	if x != nil {
-		return x.Unit
-	}
-	return ""
 }
 
 // Request message for getting sensor data
@@ -200,22 +208,25 @@ var File_sensor_proto protoreflect.FileDescriptor
 
 const file_sensor_proto_rawDesc = "" +
 	"\n" +
-	"\fsensor.proto\"x\n" +
+	"\fsensor.proto\"\x95\x01\n" +
 	"\n" +
 	"SensorData\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\x01R\x05value\x12\x1c\n" +
-	"\ttimestamp\x18\x03 \x01(\x03R\ttimestamp\x12\x12\n" +
-	"\x04type\x18\x04 \x01(\tR\x04type\x12\x12\n" +
-	"\x04unit\x18\x05 \x01(\tR\x04unit\",\n" +
+	"\x05value\x18\x02 \x01(\x01R\x05value\x12\x1f\n" +
+	"\vsensor_type\x18\x03 \x01(\tR\n" +
+	"sensorType\x12\x10\n" +
+	"\x03id1\x18\x04 \x01(\tR\x03id1\x12\x10\n" +
+	"\x03id2\x18\x05 \x01(\x05R\x03id2\x12\x1c\n" +
+	"\ttimestamp\x18\x06 \x01(\x03R\ttimestamp\",\n" +
 	"\rSensorRequest\x12\x1b\n" +
 	"\tsensor_id\x18\x01 \x01(\tR\bsensorId\"D\n" +
 	"\x0eSensorResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessage2x\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage2\xaa\x01\n" +
 	"\rSensorService\x122\n" +
 	"\rGetSensorData\x12\x0e.SensorRequest\x1a\x0f.SensorResponse\"\x00\x123\n" +
-	"\x10StreamSensorData\x12\x0e.SensorRequest\x1a\v.SensorData\"\x000\x01B8Z6github.com/your-username/go-sensor-microservices/protob\x06proto3"
+	"\x10StreamSensorData\x12\x0e.SensorRequest\x1a\v.SensorData\"\x000\x01\x120\n" +
+	"\x0eSendSensorData\x12\v.SensorData\x1a\x0f.SensorResponse\"\x00B8Z6github.com/your-username/go-sensor-microservices/protob\x06proto3"
 
 var (
 	file_sensor_proto_rawDescOnce sync.Once
@@ -238,10 +249,12 @@ var file_sensor_proto_goTypes = []any{
 var file_sensor_proto_depIdxs = []int32{
 	1, // 0: SensorService.GetSensorData:input_type -> SensorRequest
 	1, // 1: SensorService.StreamSensorData:input_type -> SensorRequest
-	2, // 2: SensorService.GetSensorData:output_type -> SensorResponse
-	0, // 3: SensorService.StreamSensorData:output_type -> SensorData
-	2, // [2:4] is the sub-list for method output_type
-	0, // [0:2] is the sub-list for method input_type
+	0, // 2: SensorService.SendSensorData:input_type -> SensorData
+	2, // 3: SensorService.GetSensorData:output_type -> SensorResponse
+	0, // 4: SensorService.StreamSensorData:output_type -> SensorData
+	2, // 5: SensorService.SendSensorData:output_type -> SensorResponse
+	3, // [3:6] is the sub-list for method output_type
+	0, // [0:3] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name

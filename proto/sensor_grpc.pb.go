@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	SensorService_GetSensorData_FullMethodName    = "/SensorService/GetSensorData"
 	SensorService_StreamSensorData_FullMethodName = "/SensorService/StreamSensorData"
+	SensorService_SendSensorData_FullMethodName   = "/SensorService/SendSensorData"
 )
 
 // SensorServiceClient is the client API for SensorService service.
@@ -33,6 +34,8 @@ type SensorServiceClient interface {
 	GetSensorData(ctx context.Context, in *SensorRequest, opts ...grpc.CallOption) (*SensorResponse, error)
 	// Stream sensor data (optional)
 	StreamSensorData(ctx context.Context, in *SensorRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[SensorData], error)
+	// ✅ New RPC for pushing data
+	SendSensorData(ctx context.Context, in *SensorData, opts ...grpc.CallOption) (*SensorResponse, error)
 }
 
 type sensorServiceClient struct {
@@ -72,6 +75,16 @@ func (c *sensorServiceClient) StreamSensorData(ctx context.Context, in *SensorRe
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type SensorService_StreamSensorDataClient = grpc.ServerStreamingClient[SensorData]
 
+func (c *sensorServiceClient) SendSensorData(ctx context.Context, in *SensorData, opts ...grpc.CallOption) (*SensorResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SensorResponse)
+	err := c.cc.Invoke(ctx, SensorService_SendSensorData_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // SensorServiceServer is the server API for SensorService service.
 // All implementations must embed UnimplementedSensorServiceServer
 // for forward compatibility.
@@ -82,6 +95,8 @@ type SensorServiceServer interface {
 	GetSensorData(context.Context, *SensorRequest) (*SensorResponse, error)
 	// Stream sensor data (optional)
 	StreamSensorData(*SensorRequest, grpc.ServerStreamingServer[SensorData]) error
+	// ✅ New RPC for pushing data
+	SendSensorData(context.Context, *SensorData) (*SensorResponse, error)
 	mustEmbedUnimplementedSensorServiceServer()
 }
 
@@ -97,6 +112,9 @@ func (UnimplementedSensorServiceServer) GetSensorData(context.Context, *SensorRe
 }
 func (UnimplementedSensorServiceServer) StreamSensorData(*SensorRequest, grpc.ServerStreamingServer[SensorData]) error {
 	return status.Errorf(codes.Unimplemented, "method StreamSensorData not implemented")
+}
+func (UnimplementedSensorServiceServer) SendSensorData(context.Context, *SensorData) (*SensorResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendSensorData not implemented")
 }
 func (UnimplementedSensorServiceServer) mustEmbedUnimplementedSensorServiceServer() {}
 func (UnimplementedSensorServiceServer) testEmbeddedByValue()                       {}
@@ -148,6 +166,24 @@ func _SensorService_StreamSensorData_Handler(srv interface{}, stream grpc.Server
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type SensorService_StreamSensorDataServer = grpc.ServerStreamingServer[SensorData]
 
+func _SensorService_SendSensorData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SensorData)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SensorServiceServer).SendSensorData(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SensorService_SendSensorData_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SensorServiceServer).SendSensorData(ctx, req.(*SensorData))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // SensorService_ServiceDesc is the grpc.ServiceDesc for SensorService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -158,6 +194,10 @@ var SensorService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetSensorData",
 			Handler:    _SensorService_GetSensorData_Handler,
+		},
+		{
+			MethodName: "SendSensorData",
+			Handler:    _SensorService_SendSensorData_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
