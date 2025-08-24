@@ -18,8 +18,8 @@ message SensorRequest {
 
 // Response message containing sensor data
 message SensorResponse {
-    SensorData data = 1;
-    string status = 2;
+    bool success = 1;
+    string message = 2;
 }
 
 // The sensor service definition

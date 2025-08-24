@@ -146,8 +146,8 @@ func (x *SensorRequest) GetSensorId() string {
 // Response message containing sensor data
 type SensorResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Data          *SensorData            `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
-	Status        string                 `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -182,16 +182,16 @@ func (*SensorResponse) Descriptor() ([]byte, []int) {
 	return file_sensor_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *SensorResponse) GetData() *SensorData {
+func (x *SensorResponse) GetSuccess() bool {
 	if x != nil {
-		return x.Data
+		return x.Success
 	}
-	return nil
+	return false
 }
 
-func (x *SensorResponse) GetStatus() string {
+func (x *SensorResponse) GetMessage() string {
 	if x != nil {
-		return x.Status
+		return x.Message
 	}
 	return ""
 }
@@ -209,10 +209,10 @@ const file_sensor_proto_rawDesc = "" +
 	"\x04type\x18\x04 \x01(\tR\x04type\x12\x12\n" +
 	"\x04unit\x18\x05 \x01(\tR\x04unit\",\n" +
 	"\rSensorRequest\x12\x1b\n" +
-	"\tsensor_id\x18\x01 \x01(\tR\bsensorId\"I\n" +
-	"\x0eSensorResponse\x12\x1f\n" +
-	"\x04data\x18\x01 \x01(\v2\v.SensorDataR\x04data\x12\x16\n" +
-	"\x06status\x18\x02 \x01(\tR\x06status2x\n" +
+	"\tsensor_id\x18\x01 \x01(\tR\bsensorId\"D\n" +
+	"\x0eSensorResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage2x\n" +
 	"\rSensorService\x122\n" +
 	"\rGetSensorData\x12\x0e.SensorRequest\x1a\x0f.SensorResponse\"\x00\x123\n" +
 	"\x10StreamSensorData\x12\x0e.SensorRequest\x1a\v.SensorData\"\x000\x01B8Z6github.com/your-username/go-sensor-microservices/protob\x06proto3"
@@ -236,16 +236,15 @@ var file_sensor_proto_goTypes = []any{
 	(*SensorResponse)(nil), // 2: SensorResponse
 }
 var file_sensor_proto_depIdxs = []int32{
-	0, // 0: SensorResponse.data:type_name -> SensorData
-	1, // 1: SensorService.GetSensorData:input_type -> SensorRequest
-	1, // 2: SensorService.StreamSensorData:input_type -> SensorRequest
-	2, // 3: SensorService.GetSensorData:output_type -> SensorResponse
-	0, // 4: SensorService.StreamSensorData:output_type -> SensorData
-	3, // [3:5] is the sub-list for method output_type
-	1, // [1:3] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	1, // 0: SensorService.GetSensorData:input_type -> SensorRequest
+	1, // 1: SensorService.StreamSensorData:input_type -> SensorRequest
+	2, // 2: SensorService.GetSensorData:output_type -> SensorResponse
+	0, // 3: SensorService.StreamSensorData:output_type -> SensorData
+	2, // [2:4] is the sub-list for method output_type
+	0, // [0:2] is the sub-list for method input_type
+	0, // [0:0] is the sub-list for extension type_name
+	0, // [0:0] is the sub-list for extension extendee
+	0, // [0:0] is the sub-list for field type_name
 }
 
 func init() { file_sensor_proto_init() }
