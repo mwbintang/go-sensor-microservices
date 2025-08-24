@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+option go_package = "github.com/your-username/go-sensor-microservices/proto";
+
+// Sensor data message
+message SensorData {
+    string id = 1;
+    double value = 2;
+    string sensor_type = 3;
+    string id1 = 4;
+    int32 id2 = 5;
+    int64 timestamp = 6;
+}
+
+// Request message for getting sensor data
+message SensorRequest {
+    string sensor_id = 1;
+}
+
+// Response message containing sensor data
+message SensorResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+// The sensor service definition
+service SensorService {
+    // Get current sensor data
+    rpc GetSensorData(SensorRequest) returns (SensorResponse) {};
+    
+    // Stream sensor data (optional)
+    rpc StreamSensorData(SensorRequest) returns (stream SensorData) {};
+
+    // ✅ New RPC for pushing data
+    rpc SendSensorData(SensorData) returns (SensorResponse) {};
+}
