@@ -23,12 +23,12 @@ func (s *SensorServiceServer) SendSensorData(ctx context.Context, req *proto.Sen
 
 	// Convert proto SensorData to entity SensorData
 	data := &entity.SensorData{
-		ID:    req.Id,
-		Value: req.Value,
-		// SensorType: req.SensorType,
-		// ID1:        req.Id1,
-		// ID2:        int(req.Id2),
-		Timestamp: req.Timestamp,
+		ID:         req.Id,
+		Value:      req.Value,
+		SensorType: req.SensorType,
+		ID1:        req.Id1,
+		ID2:        int(req.Id2),
+		Timestamp:  req.Timestamp,
 	}
 
 	err := s.usecase.CreateSensorData(data)

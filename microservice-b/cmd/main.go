@@ -21,9 +21,10 @@ import (
 
 func main() {
 	// 1. Initialize Database Connection
+	fmt.Println(getEnv("DB_NAME", "root"))
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		getEnv("DB_USER", "root"),
-		getEnv("DB_PASSWORD", "password"),
+		getEnv("DB_PASSWORD", "Test123!"),
 		getEnv("DB_HOST", "localhost"),
 		getEnv("DB_PORT", "3306"),
 		getEnv("DB_NAME", "sensor_db"),
