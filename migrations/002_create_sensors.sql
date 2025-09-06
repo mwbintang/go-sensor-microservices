@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS sensor_data (
+    id SERIAL PRIMARY KEY,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL,
+    value DOUBLE PRECISION NOT NULL,
+    sensor_type VARCHAR(255) NOT NULL,
+    id1 VARCHAR(255),
+    id2 INT,
+    timestamp BIGINT
+);

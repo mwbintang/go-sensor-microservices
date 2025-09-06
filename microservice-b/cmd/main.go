@@ -21,7 +21,6 @@ import (
 
 func main() {
 	// 1. Initialize Database Connection
-	fmt.Println(getEnv("DB_NAME", "root"))
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		getEnv("DB_USER", "root"),
 		getEnv("DB_PASSWORD", "Test123!"),
@@ -30,7 +29,7 @@ func main() {
 		getEnv("DB_NAME", "sensor_db"),
 	)
 
-	log.Printf("Connecting to database: %s@%s:%s", getEnv("DB_USER", "root"), getEnv("DB_HOST", "localhost"), getEnv("DB_PORT", "3306"))
+	log.Printf("Connecting to database: %s@%s:%s", getEnv("DB_USER", ""), getEnv("DB_HOST", ""), getEnv("DB_PORT", ""))
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
@@ -69,6 +68,15 @@ func main() {
 		log.Printf("🚀 gRPC server listening on :50051")
 		if err := grpcServer.Serve(grpcLis); err != nil {
 			log.Fatalf("Failed to serve gRPC: %v", err)
+		}
+	}()
+
+	// Start HTTP server
+	httpServer := transport.NewHTTPServer(getEnv("HTTP_PORT", "8082"), sensorUsecase)
+	go func() {
+		log.Printf("🚀 HTTP server listening on :%s")
+		if err := httpServer.Start(); err != nil {
+			log.Fatalf("Failed to serve HTTP: %v", err)
 		}
 	}()
 

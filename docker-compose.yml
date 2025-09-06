@@ -1,0 +1,50 @@
+services:
+  # Database
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: mydb
+    ports:
+      - "3308:3306"  # Host:3308 → Container:3306
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # Microservice B (gRPC Server)
+  microservice-b:
+    build: ./microservice-b
+    ports:
+      - "50051:50051"  # gRPC port
+      - "8080:8080"    # REST API port (future)
+    environment:
+      DB_HOST: mysql
+      DB_USER: root
+      DB_PASSWORD: Test123!
+      DB_NAME: sensor_db
+      DB_PORT: 3306
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Microservice A - Temperature Sensor
+  microservice-a-temperature:
+    build: ./microservice-a
+    ports:
+      - "8081:8081"    # REST API for frequency control
+    environment:
+      MICROSERVICE_B_URL: microservice-b:50051
+      SENSOR_TYPE: temperature
+      INITIAL_INTERVAL_MS: 1000
+      HTTP_PORT: 8081
+    depends_on:
+      - microservice-b
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
