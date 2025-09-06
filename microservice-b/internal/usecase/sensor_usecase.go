@@ -11,6 +11,7 @@ type SensorUsecase interface {
 	FindByTimeRange(start, end int64) ([]entity.SensorData, error)
 	DeleteByIDs(id1 string, id2 int) error
 	UpdateSensorData(data *entity.SensorData) error
+	FindPaginated(page, pageSize int) ([]entity.SensorData, int64, error)
 }
 
 type sensorUsecase struct {
@@ -39,4 +40,8 @@ func (uc *sensorUsecase) DeleteByIDs(id1 string, id2 int) error {
 
 func (uc *sensorUsecase) UpdateSensorData(data *entity.SensorData) error {
 	return uc.repo.Update(data)
+}
+
+func (uc *sensorUsecase) FindPaginated(page, pageSize int) ([]entity.SensorData, int64, error) {
+	return uc.repo.FindPaginated(page, pageSize)
 }

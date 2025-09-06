@@ -40,3 +40,18 @@ func (r *MySQLRepository) DeleteByIDs(id1 string, id2 int) error {
 func (r *MySQLRepository) Update(sensorData *entity.SensorData) error {
 	return r.db.Save(sensorData).Error
 }
+
+func (r *MySQLRepository) FindPaginated(page, pageSize int) ([]entity.SensorData, int64, error) {
+	var data []entity.SensorData
+	var total int64
+
+	r.db.Model(&entity.SensorData{}).Count(&total) // get total rows
+
+	offset := (page - 1) * pageSize
+	result := r.db.Limit(pageSize).Offset(offset).Find(&data)
+	if result.Error != nil {
+		return nil, 0, result.Error
+	}
+
+	return data, total, nil
+}

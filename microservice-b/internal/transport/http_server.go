@@ -25,8 +25,9 @@ func NewHTTPServer(port string, sensorUsecase usecase.SensorUsecase) *HTTPServer
 
 	// Routes
 	e.GET("/health", sensorHandler.HealthCheck)
-	e.GET("/data", sensorHandler.GetDataByIDs)
-	e.GET("/data/range", sensorHandler.GetDataByTimeRange)
+	e.GET("/data", sensorHandler.GetDataPaginated)
+	e.DELETE("/data", sensorHandler.DeleteData)
+	e.PUT("/data", sensorHandler.EditData)
 
 	return &HTTPServer{
 		echo: e,
